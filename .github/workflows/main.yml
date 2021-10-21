@@ -89,6 +89,7 @@ jobs:
         # access regardless of the host operating system
         shell: bash
         run: |
+          mkdir ${{github.workspace}}/build
           cmake ${{github.workspace}}/build -DCMAKE_INSTALL_PREFIX:PATH=${{github.workspace}}/artifacts -DCMAKE_TOOLCHAIN_FILE:PATH=${{github.workspace}}/build/vcpkg/scripts/buildsystems/vcpkg.cmake 
 
       - name: Build & Install
