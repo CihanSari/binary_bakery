@@ -23,6 +23,7 @@ jobs:
           - platform_name: linux
             os: ubuntu-latest
             cxx: g++-11
+            triplet: x64-linux
           - platform_name: windows
             os: windows-latest
             cxx: msvc
@@ -40,7 +41,7 @@ jobs:
         run: |
           if [ "$RUNNER_OS" == "Linux" ]; then
               sudo apt update
-              sudo apt install gcc-11 g++-11
+              sudo apt -y install gcc-11 g++-11
           fi
         shell: bash
 
