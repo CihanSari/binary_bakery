@@ -3,9 +3,9 @@ name: binary_bakery_CI
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main ]
+    branches: [ main, master ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, master ]
   release:
     types: [published]
   # Allows you to run this workflow manually from the Actions tab
@@ -34,22 +34,43 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Get dependencies
+      - name: Get VCPKG
+        env:
+          CXX: ${{ matrix.cxx }}
+        # Use a bash shell so we can use the same syntax for environment variable
+        # access regardless of the host operating system
+        uses: actions/checkout@v2
+        with:
+          repository: 'https://github.com/microsoft/vcpkg'
+          path: 'build/vcpkg'
+          
+      - name: Bootstrap VCPKG
         env:
           CXX: ${{ matrix.cxx }}
         # Use a bash shell so we can use the same syntax for environment variable
         # access regardless of the host operating system
         shell: bash
-        working-directory: ${{github.workspace}}/build
+        working-directory: ${{github.workspace}}/build/vcpkg
         run: |
-          git clone https://github.com/microsoft/vcpkg
           if [ "$RUNNER_OS" == "Windows" ]; then
-            ./vcpkg/bootstrap-vcpkg.bat
-            VCPKG_DEFAULT_TRIPLET=x64-windows-static
-          elif [ "$RUNNER_OS" == "Windows" ]; then
-            ./vcpkg/bootstrap-vcpkg.sh
+            ./bootstrap-vcpkg.bat
+          else
+            ./bootstrap-vcpkg.sh
           fi
-          ./vcpkg/vcpkg install zstd lz4 tomlplusplus fmt stb doctest
+
+          
+      - name: Install dependencies
+        env:
+          CXX: ${{ matrix.cxx }}
+        # Use a bash shell so we can use the same syntax for environment variable
+        # access regardless of the host operating system
+        shell: bash
+        working-directory: ${{github.workspace}}/build/vcpkg
+        run: |
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            VCPKG_DEFAULT_TRIPLET=x64-windows-static
+          fi
+          ./vcpkg install zstd lz4 tomlplusplus fmt stb doctest
 
       - name: Configure CMake
         env:
