@@ -45,51 +45,12 @@ jobs:
           fi
         shell: bash
 
-      - name: Get VCPKG
-        env:
-          CXX: ${{ matrix.cxx }}
-        # Use a bash shell so we can use the same syntax for environment variable
-        # access regardless of the host operating system
-        uses: actions/checkout@v2
-        with:
-          repository: 'microsoft/vcpkg'
-          path: 'build/vcpkg'
-          
-      - name: Bootstrap VCPKG
-        env:
-          CXX: ${{ matrix.cxx }}
-        # Use a bash shell so we can use the same syntax for environment variable
-        # access regardless of the host operating system
-        shell: bash
-        working-directory: ${{github.workspace}}/build/vcpkg
-        run: |
-          if [ "$RUNNER_OS" == "Windows" ]; then
-            ./bootstrap-vcpkg.bat
-          else
-            ./bootstrap-vcpkg.sh
-          fi
-
-          
-      - name: Install dependencies
-        env:
-          CXX: ${{ matrix.cxx }}
-          VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
-        # Use a bash shell so we can use the same syntax for environment variable
-        # access regardless of the host operating system
-        shell: bash
-        working-directory: ${{github.workspace}}/build/vcpkg
-        run: |
-          ./vcpkg install zstd lz4 tomlplusplus fmt stb doctest
-
       - name: Configure CMake
         env:
           CXX: ${{ matrix.cxx }}
-          VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
-          CMAKE_TOOLCHAIN_FILE: ${{github.workspace}}/build/vcpkg/scripts/buildsystems/vcpkg.cmake
-          DESTDIR: ${{github.workspace}}/artifacts
         shell: bash
         working-directory: ${{github.workspace}}/build
-        run: cmake ..
+        run: cmake .. -DBUILD_VCPKG=ON
 
       - name: Build & Install
         working-directory: ${{github.workspace}}/build

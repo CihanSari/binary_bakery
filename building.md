@@ -4,6 +4,17 @@
 This document has instructions on how to build Binary bakery :cookie: from source. Note that it only covers the build of library itself and is mostly meant for contributors and/or power users.
 Other should follow the user instructions. See the [Readme](readme.md) for instructions.
 
+## Quick jump
+Our CI handles most of the cases and steps are available through cmake. Your mileage may vary.
+
+```bash
+cmake -B build -S . -DBUILD_VCPKG=ON
+cmake --build build --config Release --target install
+ctest -C Release --output-on-failure
+```
+
+If you would like to set the dependencies manually, continue below.
+
 ## Pre-requisites
 
 Recommended way to install the dependencies is using [vcpkg](https://vcpkg.io/en/index.html).
