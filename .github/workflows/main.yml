@@ -22,10 +22,11 @@ jobs:
         include:
           - platform_name: linux
             os: ubuntu-latest
-            cxx: g++-10
+            cxx: g++-11
           - platform_name: windows
             os: windows-latest
             cxx: msvc
+            triplet: x64-windows-static
 
           # Tomlplusplus doesn't support OSx
           # - platform_name: macos
@@ -34,6 +35,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
+      - name: Install g++-11
+        run: |
+          if [ "$RUNNER_OS" == "Linux" ]; then
+              sudo apt update
+              sudo apt install gcc-11 g++-11
+          fi
+        shell: bash
 
       - name: Get VCPKG
         env:
@@ -63,28 +72,23 @@ jobs:
       - name: Install dependencies
         env:
           CXX: ${{ matrix.cxx }}
+          VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
         # Use a bash shell so we can use the same syntax for environment variable
         # access regardless of the host operating system
         shell: bash
         working-directory: ${{github.workspace}}/build/vcpkg
         run: |
-          if [ "$RUNNER_OS" == "Windows" ]; then
-            VCPKG_DEFAULT_TRIPLET=x64-windows-static
-          fi
           ./vcpkg install zstd lz4 tomlplusplus fmt stb doctest
 
       - name: Configure CMake
         env:
           CXX: ${{ matrix.cxx }}
+          VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
         # Use a bash shell so we can use the same syntax for environment variable
         # access regardless of the host operating system
         shell: bash
-        working-directory: ${{github.workspace}}/build
         run: |
-          if [ "$RUNNER_OS" == "Windows" ]; then
-            VCPKG_DEFAULT_TRIPLET=x64-windows-static
-          fi
-          cmake -S ${{github.workspace}} -B ${{github.workspace}}/build -DCMAKE_INSTALL_PREFIX:PATH=${{github.workspace}}/artifacts -DCMAKE_TOOLCHAIN_FILE:PATH=${{github.workspace}}/build/vcpkg/scripts/buildsystems/vcpkg.cmake 
+          cmake ${{github.workspace}}/build -DCMAKE_INSTALL_PREFIX:PATH=${{github.workspace}}/artifacts -DCMAKE_TOOLCHAIN_FILE:PATH=${{github.workspace}}/build/vcpkg/scripts/buildsystems/vcpkg.cmake 
 
       - name: Build & Install
         working-directory: ${{github.workspace}}/build
