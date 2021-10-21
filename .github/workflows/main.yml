@@ -22,7 +22,7 @@ jobs:
         include:
           - platform_name: linux
             os: ubuntu-latest
-            cxx: g++-11
+            cxx: g++-10
           - platform_name: windows
             os: windows-latest
             cxx: msvc
