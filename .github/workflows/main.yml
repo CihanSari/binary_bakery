@@ -19,17 +19,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # specify a specific compiler to build with each OS separately
         include:
           - platform_name: linux
-            os: ubuntu-20.04
-            cxx: g++-10
-          - platform_name: macos
-            os: macos-10.15
-            cxx: clang++
+            os: ubuntu-latest
+            cxx: g++-11
           - platform_name: windows
-            os: windows-2019
+            os: windows-latest
             cxx: msvc
+
+          # Tomlplusplus doesn't support OSx
+          # - platform_name: macos
+          #   os: macos-latest
+          #   cxx: clang++
 
     steps:
       - uses: actions/checkout@v2
@@ -83,12 +84,12 @@ jobs:
           if [ "$RUNNER_OS" == "Windows" ]; then
             VCPKG_DEFAULT_TRIPLET=x64-windows-static
           fi
-          cmake -S $GITHUB_WORKSPACE -B ${{github.workspace}}/build -DCMAKE_INSTALL_PREFIX:PATH=$GITHUB_WORKSPACE/artifacts -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/build/vcpkg/scripts/buildsystems/vcpkg.cmake
+          cmake -S {{github.workspace}} -B ${{github.workspace}}/build -DCMAKE_INSTALL_PREFIX:PATH={{github.workspace}}/artifacts -DCMAKE_TOOLCHAIN_FILE:PATH=${{github.workspace}}/build/vcpkg/scripts/buildsystems/vcpkg.cmake 
 
       - name: Build & Install
         working-directory: ${{github.workspace}}/build
         shell: bash
-        run: cmake --build . --config $BUILD_TYPE --target Install
+        run: cmake --build . --config $BUILD_TYPE --target install
 
       - name: Test
         working-directory: ${{github.workspace}}/build
