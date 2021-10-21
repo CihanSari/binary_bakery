@@ -14,28 +14,30 @@ function(bb_buildVCPKG)
   endif()
   # bootstrap vcpkg
   if(WIN32)
-    set(bootstrapExtension ".bat")
+    set(bootstrapCmd "bootstrap-vcpkg.bat")
+    set(vcpkgCmd "vcpkg")
     set(triplet "x64-windows-static")
   else() # TODO add MacOS support
-    set(bootstrapExtension ".sh")
+    set(bootstrapCmd "./bootstrap-vcpkg.sh")
+    set(vcpkgCmd "./vcpkg")
     set(triplet "x64-linux")
   endif(WIN32)
 
   execute_process(
-    COMMAND bootstrap-vcpkg${bootstrapExtension}
+    COMMAND ${bootstrapCmd}
     WORKING_DIRECTORY ${vcpkgPath}
     RESULT_VARIABLE VCPKG_BOOTSTRAP_RESULT)
   if(NOT VCPKG_BOOTSTRAP_RESULT EQUAL "0")
     message(
       FATAL_ERROR
-        "${vcpkgPath}/bootstrap-vcpkg failed with ${VCPKG_BOOTSTRAP_RESULT}, please check vcpkg"
+        "${bootstrapCmd} on ${vcpkgPath} failed with ${VCPKG_BOOTSTRAP_RESULT}, please check vcpkg"
     )
   endif()
   # install dependencies vcpkg
   set(vcpkg_install_args
       "install;zstd;lz4;tomlplusplus;fmt;stb;doctest;--triplet;${triplet}")
   execute_process(
-    COMMAND vcpkg ${vcpkg_install_args}
+    COMMAND ${vcpkgCmd} ${vcpkg_install_args}
     WORKING_DIRECTORY ${vcpkgPath}
     RESULT_VARIABLE VCPKG_INSTALL_RESULT)
   if(NOT VCPKG_INSTALL_RESULT EQUAL "0")

@@ -10,7 +10,7 @@ Our CI handles most of the cases and steps are available through cmake. Your mil
 ```bash
 cmake -B build -S . -DBUILD_VCPKG=ON
 cmake --build build --config Release --target install
-ctest -C Release --output-on-failure
+ctest --test-dir build -C Release --output-on-failure
 ```
 
 If you would like to set the dependencies manually, continue below.
