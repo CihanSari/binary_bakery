@@ -82,25 +82,14 @@ jobs:
           ./vcpkg install zstd lz4 tomlplusplus fmt stb doctest
 
       - name: Configure CMake
-        # Separated due to path issues on windows...
-        if: RUNNER_OS == 'Windows'
         env:
           CXX: ${{ matrix.cxx }}
           VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
-        shell: powershell
-        working-directory: ${{github.workspace}}/build
-        run: cmake .. -DCMAKE_INSTALL_PREFIX:PATH=${{github.workspace}}/artifacts -DCMAKE_TOOLCHAIN_FILE:PATH=${{github.workspace}}/build/vcpkg/scripts/buildsystems/vcpkg.cmake 
-
-      - name: Configure CMake
-        if: RUNNER_OS == 'Linux'
-        env:
-          CXX: ${{ matrix.cxx }}
-          VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
-        # Use a bash shell so we can use the same syntax for environment variable
-        # access regardless of the host operating system
+          CMAKE_TOOLCHAIN_FILE: ${{github.workspace}}/build/vcpkg/scripts/buildsystems/vcpkg.cmake
+          DESTDIR: ${{github.workspace}}/artifacts
         shell: bash
         working-directory: ${{github.workspace}}/build
-        run: cmake .. -DCMAKE_INSTALL_PREFIX:PATH=${{github.workspace}}/artifacts -DCMAKE_TOOLCHAIN_FILE:PATH=${{github.workspace}}/build/vcpkg/scripts/buildsystems/vcpkg.cmake 
+        run: cmake ..
 
       - name: Build & Install
         working-directory: ${{github.workspace}}/build
