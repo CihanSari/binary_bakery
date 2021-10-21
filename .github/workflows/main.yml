@@ -84,7 +84,7 @@ jobs:
           if [ "$RUNNER_OS" == "Windows" ]; then
             VCPKG_DEFAULT_TRIPLET=x64-windows-static
           fi
-          cmake -S {{github.workspace}} -B ${{github.workspace}}/build -DCMAKE_INSTALL_PREFIX:PATH={{github.workspace}}/artifacts -DCMAKE_TOOLCHAIN_FILE:PATH=${{github.workspace}}/build/vcpkg/scripts/buildsystems/vcpkg.cmake 
+          cmake -S ${{github.workspace}} -B ${{github.workspace}}/build -DCMAKE_INSTALL_PREFIX:PATH=${{github.workspace}}/artifacts -DCMAKE_TOOLCHAIN_FILE:PATH=${{github.workspace}}/build/vcpkg/scripts/buildsystems/vcpkg.cmake 
 
       - name: Build & Install
         working-directory: ${{github.workspace}}/build
