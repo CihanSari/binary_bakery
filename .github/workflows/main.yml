@@ -89,12 +89,7 @@ jobs:
         # access regardless of the host operating system
         shell: bash
         working-directory: ${{github.workspace}}/build
-        run: |
-          if [ "$RUNNER_OS" == "Windows" ]; then
-            cmake ${{github.workspace}} -DCMAKE_INSTALL_PREFIX:PATH=${{github.workspace}}\artifacts -DCMAKE_TOOLCHAIN_FILE:PATH=${{github.workspace}}\build\vcpkg\scripts\buildsystems\vcpkg.cmake 
-          else
-            cmake ${{github.workspace}} -DCMAKE_INSTALL_PREFIX:PATH=${{github.workspace}}/artifacts -DCMAKE_TOOLCHAIN_FILE:PATH=${{github.workspace}}/build/vcpkg/scripts/buildsystems/vcpkg.cmake 
-          fi
+        run: cmake .. -DCMAKE_INSTALL_PREFIX:PATH=${{github.workspace}}/artifacts -DCMAKE_TOOLCHAIN_FILE:PATH=${{github.workspace}}/build/vcpkg/scripts/buildsystems/vcpkg.cmake 
 
       - name: Build & Install
         working-directory: ${{github.workspace}}/build
