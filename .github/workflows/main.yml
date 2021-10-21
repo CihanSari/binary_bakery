@@ -41,7 +41,7 @@ jobs:
         # access regardless of the host operating system
         uses: actions/checkout@v2
         with:
-          repository: 'https://github.com/microsoft/vcpkg'
+          repository: 'microsoft/vcpkg'
           path: 'build/vcpkg'
           
       - name: Bootstrap VCPKG
