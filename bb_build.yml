@@ -13,23 +13,19 @@ pool:
   vmImage: $(imageName)
 
 steps:
-- bash:
+- bash: cmake $(System.DefaultWorkingDirectory) -DBUILD_VCPKG=ON
   displayName: Configure CMake
   env:
     CXX: ${{ cxx }}
   workingDirectory: $(System.DefaultWorkingDirectory)
-  script: cmake $(System.DefaultWorkingDirectory) -DBUILD_VCPKG=ON
 
-- bash:
+- bash: cmake --build . --config $BUILD_TYPE --target install
   displayName: Build & Install
   workingDirectory: $(System.DefaultWorkingDirectory)
-  script: cmake --build . --config $BUILD_TYPE --target install
 
-- bash:
+- bash: ctest -C $BUILD_TYPE --output-on-failure
   displayName: Test
   workingDirectory: $(System.DefaultWorkingDirectory)
-  # Use CTest to run tests
-  script: ctest -C $BUILD_TYPE --output-on-failure
 
 - task: ArchiveFiles@2
   inputs:
