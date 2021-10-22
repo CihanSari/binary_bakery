@@ -48,18 +48,15 @@ jobs:
       - name: Configure CMake
         env:
           CXX: ${{ matrix.cxx }}
-        shell: bash
         working-directory: ${{github.workspace}}/build
         run: cmake .. -DBUILD_VCPKG=ON
 
       - name: Build & Install
         working-directory: ${{github.workspace}}/build
-        shell: bash
         run: cmake --build . --config $BUILD_TYPE --target install
 
       - name: Test
         working-directory: ${{github.workspace}}/build
-        shell: bash
         # Use CTest to run tests
         run: ctest -C $BUILD_TYPE --output-on-failure
 

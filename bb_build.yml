@@ -13,6 +13,13 @@ pool:
   vmImage: $(imageName)
 
 steps:
+- script: |
+    sudo apt update
+    sudo apt -y install gcc-11 g++-11
+  condition: and(succeeded(), eq(variables['Agent.OS'], 'Linux'))
+  displayName: Install gcc-11
+
+
 - script: cmake $(Build.Repository.LocalPath) -DBUILD_VCPKG=ON
   displayName: Configure CMake
 
