@@ -15,8 +15,6 @@ pool:
 steps:
 - bash: cmake $(System.DefaultWorkingDirectory) -DBUILD_VCPKG=ON
   displayName: Configure CMake
-  env:
-    CXX: ${{ cxx }}
   workingDirectory: $(System.DefaultWorkingDirectory)
 
 - bash: cmake --build . --config $BUILD_TYPE --target install
