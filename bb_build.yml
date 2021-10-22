@@ -1,0 +1,49 @@
+trigger:
+- master
+- main
+
+strategy:
+  matrix:
+    linux:
+      imageName: 'ubuntu-latest'
+      cxx: g++-11
+      triplet: x64-linux
+    windows:
+      imageName: 'windows-latest'
+      cxx: msvc
+      triplet: x64-windows-static
+
+pool:
+  vmImage: $(imageName)
+
+steps:
+- task: Bash@3
+  displayName: Configure CMake
+  env:
+    CXX: ${{ matrix.cxx }}
+  workingDirectory: $(System.DefaultWorkingDirectory)
+  script: cmake $(System.DefaultWorkingDirectory) -DBUILD_VCPKG=ON
+
+- task: Bash@3
+  displayName: Build & Install
+  workingDirectory: $(System.DefaultWorkingDirectory)
+  script: cmake --build . --config $BUILD_TYPE --target install
+
+- task: Bash@3
+  displayName: Test
+  workingDirectory: $(System.DefaultWorkingDirectory)
+  # Use CTest to run tests
+  script: ctest -C $BUILD_TYPE --output-on-failure
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(System.DefaultWorkingDirectory)/artifacts'
+    includeRootFolder: false
+
+- task: GithubRelease@1 
+  displayName: 'Create GitHub Release'      
+  inputs:
+    gitHubConnection: CihanSari
+    repositoryName: CihanSari/binary_bakery
+    tagSource: auto
+    tag: $(Build.BuildNumber)
