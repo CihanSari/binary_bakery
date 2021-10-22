@@ -30,10 +30,10 @@ steps:
     rootFolderOrFile: '$(System.DefaultWorkingDirectory)/artifacts'
     includeRootFolder: false
 
-- task: GithubRelease@1 
-  displayName: 'Create GitHub Release'      
-  inputs:
-    gitHubConnection: CihanSari
-    repositoryName: CihanSari/binary_bakery
-    tagSource: auto
-    tag: $(Build.BuildNumber)
+# - task: GithubRelease@1 
+#   displayName: 'Create GitHub Release'      
+#   inputs:
+#     gitHubConnection: CihanSari
+#     repositoryName: CihanSari/binary_bakery
+#     tagSource: auto
+#     tag: $(Build.BuildNumber)
