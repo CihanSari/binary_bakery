@@ -13,21 +13,18 @@ pool:
   vmImage: $(imageName)
 
 steps:
-- bash: cmake $(System.DefaultWorkingDirectory) -DBUILD_VCPKG=ON
+- script: cmake $(Build.Repository.LocalPath) -DBUILD_VCPKG=ON
   displayName: Configure CMake
-  workingDirectory: $(System.DefaultWorkingDirectory)
 
-- bash: cmake --build . --config $BUILD_TYPE --target install
+- script: cmake --build . --config $BUILD_TYPE --target install
   displayName: Build & Install
-  workingDirectory: $(System.DefaultWorkingDirectory)
 
-- bash: ctest -C $BUILD_TYPE --output-on-failure
+- script: ctest -C $BUILD_TYPE --output-on-failure
   displayName: Test
-  workingDirectory: $(System.DefaultWorkingDirectory)
 
 - task: ArchiveFiles@2
   inputs:
-    rootFolderOrFile: '$(System.DefaultWorkingDirectory)/artifacts'
+    rootFolderOrFile: '$(Build.Repository.LocalPath)/artifacts'
     includeRootFolder: false
 
 # - task: GithubRelease@1 
