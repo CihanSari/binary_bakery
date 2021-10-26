@@ -91,7 +91,7 @@ namespace {
       {
          const std::string conditional_keyword = first ? "if" : "else if";
          out << fmt::format(
-            "   {}(name == \"{}\")\n      return &{}[0];\n",
+            "   {}(name == R\"({})\")\n      return &{}[0];\n",
             conditional_keyword, pl.m_path.get_path().string(), get_variable_name(pl.m_path)
          );
          first = false;
@@ -253,7 +253,7 @@ auto bb::get_payload(
    const config& cfg
 ) -> payload
 {
-   if (is_image_path(file))
+   if (cfg.parse_images && is_image_path(file))
       return get_image_payload(file, cfg);
    else
       return get_binary_file_payload(file);

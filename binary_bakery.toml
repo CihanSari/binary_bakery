@@ -23,3 +23,7 @@ image_loading_direction = "bottom_to_top"
 
 # Directory paths are valid only if recursive mode is true
 recursive = false
+
+# True: Parses the image content (recommended)
+# False: Treats images as binary files
+parse_images = true
