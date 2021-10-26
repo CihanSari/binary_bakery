@@ -8,39 +8,36 @@
 namespace
 {
 
-   auto get_absolute_path(const fs::path& path) -> fs::path
+   auto get_path(const fs::path& path) -> fs::path
    {
       if (fs::exists(path) == false)
          throw std::runtime_error("Path doesn't exist");
-      if (path.is_absolute())
-         return path;
-      else
-         return fs::absolute(path);
+      return path.lexically_normal();
    }
 
 
-   auto get_absolute_file_path(const fs::path& path) -> fs::path
+   auto get_file_path(const fs::path& path) -> fs::path
    {
-      const fs::path absolute = get_absolute_path(path);
-      if (fs::is_regular_file(absolute) == false)
+      const fs::path filePath = get_path(path);
+      if (fs::is_regular_file(filePath) == false)
          throw std::runtime_error("Path is no file");
-      return absolute;
+      return filePath;
    }
 
 
-   auto get_absolute_directory_path(const fs::path& path) -> fs::path
+   auto get_directory_path(const fs::path& path) -> fs::path
    {
-      const fs::path absolute = get_absolute_path(path);
-      if (fs::is_directory(absolute) == false)
+      const fs::path dirPath = get_path(path);
+      if (fs::is_directory(dirPath) == false)
          throw std::runtime_error("Path is no directory");
-      return absolute;
+      return dirPath;
    }
 
 } // namespace {}
 
 
 
-auto bb::get_binary_file(const abs_file_path& file_p) -> std::vector<uint8_t>
+auto bb::get_binary_file(const path_type& file_p) -> std::vector<uint8_t>
 {
    std::ifstream file(file_p.get_path(), std::ios::ate | std::ios::binary);
 
@@ -68,15 +65,15 @@ bb::path_type::path_type(const fs::path& path)
 }
 
 
-bb::abs_file_path::abs_file_path(const fs::path& path)
-   : path_type(get_absolute_file_path(path))
+bb::file_path::file_path(const fs::path& path)
+   : path_type(get_file_path(path))
 {
 
 }
 
 
-bb::abs_directory_path::abs_directory_path(const fs::path& path)
-   : path_type(get_absolute_directory_path(path))
+bb::directory_path::directory_path(const fs::path& path)
+   : path_type(get_directory_path(path))
 {
 
 }

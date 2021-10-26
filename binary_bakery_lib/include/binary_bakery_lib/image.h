@@ -9,7 +9,7 @@
 
 namespace bb
 {
-   struct abs_file_path;
+   struct file_path;
 
    struct image_dimensions {
       int width = 0;
@@ -28,8 +28,8 @@ namespace bb
       int m_height = 0;
       std::vector<color_type> m_pixels{};
 
-      explicit image(const abs_file_path& file, const image_dimensions& image_dim, const image_vertical_direction direction);
-      explicit image(const abs_file_path& file, const image_vertical_direction direction);
+      explicit image(const file_path& file, const image_dimensions& image_dim, const image_vertical_direction direction);
+      explicit image(const file_path& file, const image_vertical_direction direction);
       [[nodiscard]] auto get_byte_count() const -> int;
       [[nodiscard]] auto get_element_count() const -> int;
       [[nodiscard]] auto operator[](const int index) const -> const color_type&;
@@ -41,7 +41,7 @@ namespace bb
 
    // To instantiate the templated image type, it's necessary to first find out the images bpp
    // before reading.
-   [[nodiscard]] auto get_image_dimensions(const abs_file_path& file) -> image_dimensions;
+   [[nodiscard]] auto get_image_dimensions(const file_path& file) -> image_dimensions;
 
    template<int bpp>
    [[nodiscard]] auto get_image_bytestream(const image<bpp>& image) -> std::vector<uint8_t>;

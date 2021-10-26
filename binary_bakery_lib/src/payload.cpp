@@ -9,13 +9,13 @@
 #include <binary_bakery_lib/compression.h>
 
 #include <fmt/format.h>
-
+#include <functional>
 
 namespace {
 
    using namespace bb;
 
-   [[nodiscard]] auto is_image_path(const abs_file_path& file) -> bool
+   [[nodiscard]] auto is_image_path(const file_path& file) -> bool
    {
       const std::string ext_string = file.get_path().extension().string();
       return ext_string == std::string{ ".png" }
@@ -24,7 +24,7 @@ namespace {
    }
 
 
-   [[nodiscard]] auto get_binary_file_payload(const abs_file_path& file) -> payload
+   [[nodiscard]] auto get_binary_file_payload(const file_path& file) -> payload
    {
       return payload{ get_binary_file(file), generic_binary{}, file };
    }
@@ -32,7 +32,7 @@ namespace {
 
    template<int bpp>
    [[nodiscard]] auto get_image_payload_impl(
-      const abs_file_path& file,
+      const file_path& file,
       const image_dimensions& image_dim,
       const config& cfg
    ) -> payload
@@ -45,7 +45,7 @@ namespace {
 
 
    [[nodiscard]] auto get_image_payload(
-      const abs_file_path& file,
+      const file_path& file,
       const config& cfg
    ) -> payload
    {
@@ -70,11 +70,10 @@ namespace {
 
 
    [[nodiscard]] auto get_variable_name(
-      const abs_file_path& file
+      const file_path& file
    ) -> std::string
    {
-      const std::string var_name = fmt::format("bb_{}", file.get_path().filename().string());
-      return get_replaced_str(var_name, ".", "_");
+      return fmt::format("bb_{}", hash_value(file.get_path()));
    }
 
    auto write_bb_get_fun(
@@ -93,7 +92,7 @@ namespace {
          const std::string conditional_keyword = first ? "if" : "else if";
          out << fmt::format(
             "   {}(name == \"{}\")\n      return &{}[0];\n",
-            conditional_keyword, pl.m_path.get_path().filename().string(), get_variable_name(pl.m_path)
+            conditional_keyword, pl.m_path.get_path().string(), get_variable_name(pl.m_path)
          );
          first = false;
       }
@@ -185,7 +184,7 @@ namespace {
 
    [[nodiscard]] auto get_payload_string(
       const config& cfg,
-      const abs_file_path& payload_path,
+      const file_path& payload_path,
       const std::string& content_str
    ) -> std::string
    {
@@ -250,7 +249,7 @@ namespace {
 
 
 auto bb::get_payload(
-   const abs_file_path& file,
+   const file_path& file,
    const config& cfg
 ) -> payload
 {
@@ -264,7 +263,7 @@ auto bb::get_payload(
 auto bb::write_payloads_to_file(
    const config& cfg,
    std::vector<payload>&& payloads,
-   const abs_directory_path& working_dir
+   const directory_path& working_dir
 ) -> void
 {
    const std::vector<std::string> payload_strings = get_payload_strings(payloads, cfg);

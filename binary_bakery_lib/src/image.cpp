@@ -22,7 +22,7 @@ namespace
 
 template<int bpp>
 bb::image<bpp>::image(
-   const abs_file_path& file,
+   const file_path& file,
    const image_dimensions& image_dim,
    const image_vertical_direction direction
 )
@@ -59,29 +59,29 @@ bb::image<bpp>::image(
    std::memcpy(m_pixels.data(), data, get_byte_count());
    stbi_image_free(data);
 }
-template bb::image<1>::image(const abs_file_path&, const image_dimensions&, const image_vertical_direction);
-template bb::image<2>::image(const abs_file_path&, const image_dimensions&, const image_vertical_direction);
-template bb::image<3>::image(const abs_file_path&, const image_dimensions&, const image_vertical_direction);
-template bb::image<4>::image(const abs_file_path&, const image_dimensions&, const image_vertical_direction);
+template bb::image<1>::image(const file_path&, const image_dimensions&, const image_vertical_direction);
+template bb::image<2>::image(const file_path&, const image_dimensions&, const image_vertical_direction);
+template bb::image<3>::image(const file_path&, const image_dimensions&, const image_vertical_direction);
+template bb::image<4>::image(const file_path&, const image_dimensions&, const image_vertical_direction);
 
 
 template<int bpp>
 bb::image<bpp>::image(
-   const abs_file_path& file,
+   const file_path& file,
    const image_vertical_direction direction
 )
    : image<bpp>(file, get_image_dimensions(file), direction)
 {
    
 }
-template bb::image<1>::image(const abs_file_path&, const image_vertical_direction);
-template bb::image<2>::image(const abs_file_path&, const image_vertical_direction);
-template bb::image<3>::image(const abs_file_path&, const image_vertical_direction);
-template bb::image<4>::image(const abs_file_path&, const image_vertical_direction);
+template bb::image<1>::image(const file_path&, const image_vertical_direction);
+template bb::image<2>::image(const file_path&, const image_vertical_direction);
+template bb::image<3>::image(const file_path&, const image_vertical_direction);
+template bb::image<4>::image(const file_path&, const image_vertical_direction);
 
 
 auto bb::get_image_dimensions(
-   const abs_file_path& file
+   const file_path& file
 ) -> image_dimensions
 {
    image_dimensions dimensions;

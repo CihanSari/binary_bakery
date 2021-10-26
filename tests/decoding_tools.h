@@ -6,13 +6,13 @@
 #include <binary_bakery_decoder.h>
 
 namespace bb {
-   struct abs_file_path;
+   struct file_path;
 }
 
 namespace tests
 {
 
-   auto get_image_bytes(const bb::abs_file_path& file) -> std::vector<uint8_t>;
+   auto get_image_bytes(const bb::file_path& file) -> std::vector<uint8_t>;
 
    template<typename T>
    auto get_decode_to_vector_result(const uint64_t*, bb::decompression_fun_type decomp_fun) -> std::vector<uint8_t>;

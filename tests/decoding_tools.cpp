@@ -11,7 +11,7 @@
 using namespace bb;
 
 auto tests::get_image_bytes(
-   const bb::abs_file_path& file
+   const bb::file_path& file
 ) -> std::vector<uint8_t>
 {
    image<3> im{ file, image_vertical_direction::bottom_to_top };

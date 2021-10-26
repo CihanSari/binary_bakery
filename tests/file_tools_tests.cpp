@@ -4,24 +4,24 @@
 #include <binary_bakery_testpaths.h>
 using namespace bb;
 
-TEST_CASE("abs_directory_path")
+TEST_CASE("directory_path")
 {
    SUBCASE("must be a directory")
    {
-      CHECK_THROWS_AS(abs_directory_path{ "tests.cpp" }, std::exception);
-      CHECK_NOTHROW(abs_directory_path{ "." });
+      CHECK_THROWS_AS(directory_path{ "tests.cpp" }, std::exception);
+      CHECK_NOTHROW(directory_path{ "." });
    }
    SUBCASE("must exist")
    {
-      CHECK_THROWS_AS(abs_directory_path{ "C:/doesnt_exist" }, std::exception);
+      CHECK_THROWS_AS(directory_path{ "C:/doesnt_exist" }, std::exception);
    }
 }
 
 
-TEST_CASE("abs_file_path")
+TEST_CASE("file_path")
 {
    SUBCASE("must be a file")
    {
-    CHECK_NOTHROW(abs_file_path{testRoot / "tests.cpp"});
+    CHECK_NOTHROW(file_path{testRoot / "tests.cpp"});
    }
 }

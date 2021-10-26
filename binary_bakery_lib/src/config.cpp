@@ -116,18 +116,18 @@ namespace
 
 
 auto bb::get_cfg_from_dir(
-   const abs_directory_path& dir
+   const directory_path& dir
 ) -> std::optional<config>
 {
    const fs::path config_path = dir.get_path() / default_config_filename;
    if (fs::exists(config_path) == false)
       return std::nullopt;
-   return get_cfg_from_file(abs_file_path{ dir.get_path() / default_config_filename });
+   return get_cfg_from_file(file_path{ dir.get_path() / default_config_filename });
 }
 
 
 auto bb::get_cfg_from_file(
-   const abs_file_path& file
+   const file_path& file
 ) -> std::optional<config>
 {
    toml::table tbl;
@@ -146,6 +146,7 @@ auto bb::get_cfg_from_file(
    set_value(cfg.max_columns, tbl, "max_columns");
    set_value(cfg.compression, tbl, "compression_mode", get_compression_mode);
    set_value(cfg.prompt_for_key, tbl, "prompt_for_key");
+   set_value(cfg.recursive, tbl, "recursive");
    set_value(cfg.image_loading_direction, tbl, "image_loading_direction", get_image_write_direction);
    return cfg;
 }

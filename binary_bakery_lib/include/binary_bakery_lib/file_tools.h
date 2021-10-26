@@ -19,21 +19,21 @@ namespace bb
       [[nodiscard]] auto get_path() const -> fs::path;
    };
 
-   // Stores absolute file path. Throws if file doesn't exist. Can convert from relative path.
-   struct abs_file_path : path_type {
+   // Stores file path. Throws if file doesn't exist.
+   struct file_path : path_type {
       using path_type::path_type;
 
-      explicit abs_file_path(const fs::path& path);
+      explicit file_path(const fs::path& path);
    };
 
 
-   // Stores absolute directory path. Throws if path doesn't exist. Can convert from relative path.
-   struct abs_directory_path : path_type{
+   // Stores directory path. Throws if path doesn't exist.
+   struct directory_path : path_type{
       using path_type::path_type;
 
-      explicit abs_directory_path(const fs::path& path);
+      explicit directory_path(const fs::path& path);
    };
 
-   [[nodiscard]] auto get_binary_file(const abs_file_path& file) -> std::vector<uint8_t>;
+   [[nodiscard]] auto get_binary_file(const path_type& file) -> std::vector<uint8_t>;
 
 }

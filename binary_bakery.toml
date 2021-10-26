@@ -20,3 +20,6 @@ prompt_for_key = true
 # "bottom_to_top": First pixel is bottom left [default]
 # "top_to_bottom": First pixel is top left
 image_loading_direction = "bottom_to_top"
+
+# Directory paths are valid only if recursive mode is true
+recursive = false
